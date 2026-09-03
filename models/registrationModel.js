@@ -1,13 +1,8 @@
 const pool = require('../config/db');
 
-/**
- * Acesso a dados de inscricoes. Nenhuma regra de negocio aqui —
- * apenas leitura/escrita na tabela `registrations`, sempre via
- * prepared statements (?) para evitar SQL Injection.
- */
 const RegistrationModel = {
   async create(eventId, userId) {
-    const [result] = await pool.execute(
+    const [result] = await pool.query(
       'INSERT INTO registrations (event_id, user_id) VALUES (?, ?)',
       [eventId, userId]
     );
@@ -15,7 +10,7 @@ const RegistrationModel = {
   },
 
   async findByEventAndUser(eventId, userId) {
-    const [rows] = await pool.execute(
+    const [rows] = await pool.query(
       'SELECT * FROM registrations WHERE event_id = ? AND user_id = ? LIMIT 1',
       [eventId, userId]
     );
@@ -23,24 +18,22 @@ const RegistrationModel = {
   },
 
   async deleteByEventAndUser(eventId, userId) {
-    await pool.execute(
+    await pool.query(
       'DELETE FROM registrations WHERE event_id = ? AND user_id = ?',
       [eventId, userId]
     );
   },
 
-  /** @returns {Promise<number>} */
   async countByEvent(eventId) {
-    const [rows] = await pool.execute(
+    const [rows] = await pool.query(
       'SELECT COUNT(*) AS total FROM registrations WHERE event_id = ?',
       [eventId]
     );
     return rows[0].total;
   },
 
-  /** Lista os inscritos de um evento, com nome e e-mail. */
   async findByEvent(eventId) {
-    const [rows] = await pool.execute(
+    const [rows] = await pool.query(
       `SELECT r.*, u.name, u.email
        FROM registrations r
        JOIN users u ON u.id = r.user_id
@@ -51,9 +44,8 @@ const RegistrationModel = {
     return rows;
   },
 
-  /** Lista as inscricoes de um usuario, com dados do evento. */
   async findByUser(userId) {
-    const [rows] = await pool.execute(
+    const [rows] = await pool.query(
       `SELECT r.*, e.title, e.event_date, e.location
        FROM registrations r
        JOIN events e ON e.id = r.event_id
