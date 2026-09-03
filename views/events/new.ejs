@@ -1,0 +1,28 @@
+<%- include('../partials/header') %>
+<div class="form-page">
+  <div class="form-card" style="max-width: 520px;">
+    <p class="eyebrow">Novo evento</p>
+    <h1>Criar evento</h1>
+    <form action="/events" method="POST" class="form">
+      <label>Título
+        <input type="text" name="title" placeholder="Ex: Workshop de Node.js" required autofocus>
+      </label>
+      <label>Descrição
+        <textarea name="description" rows="4" placeholder="Do que se trata o evento?"></textarea>
+      </label>
+      <div class="form-row">
+        <label>Data e hora
+          <input type="datetime-local" name="eventDate" required>
+        </label>
+        <label>Capacidade
+          <input type="number" name="capacity" min="0" value="0" placeholder="0 = ilimitada">
+        </label>
+      </div>
+      <label>Local
+        <input type="text" name="location" placeholder="Endereço ou link online">
+      </label>
+      <button type="submit" class="btn btn--primary btn--block">Publicar evento</button>
+    </form>
+  </div>
+</div>
+<%- include('../partials/footer') %>

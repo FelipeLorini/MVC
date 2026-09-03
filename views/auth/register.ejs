@@ -1,0 +1,27 @@
+<%- include('../partials/header') %>
+<div class="form-page">
+  <div class="form-card">
+    <p class="eyebrow">Comece agora</p>
+    <h1>Criar conta</h1>
+    <form action="/auth/register" method="POST" class="form">
+      <label>Nome
+        <input type="text" name="name" placeholder="Seu nome completo" required autofocus>
+      </label>
+      <label>E-mail
+        <input type="email" name="email" placeholder="voce@email.com" required>
+      </label>
+      <label>Senha
+        <input type="password" name="password" minlength="6" placeholder="Mínimo 6 caracteres" required>
+      </label>
+      <label>Tipo de conta
+        <select name="role" required>
+          <option value="participante">Participante — quero me inscrever em eventos</option>
+          <option value="organizador">Organizador — quero criar e gerenciar eventos</option>
+        </select>
+      </label>
+      <button type="submit" class="btn btn--primary btn--block">Cadastrar</button>
+    </form>
+    <p class="form-foot">Já tem conta? <a href="/auth/login">Entrar</a></p>
+  </div>
+</div>
+<%- include('../partials/footer') %>

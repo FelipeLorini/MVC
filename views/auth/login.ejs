@@ -1,0 +1,18 @@
+<%- include('../partials/header') %>
+<div class="form-page">
+  <div class="form-card">
+    <p class="eyebrow">Bem-vindo de volta</p>
+    <h1>Entrar</h1>
+    <form action="/auth/login" method="POST" class="form">
+      <label>E-mail
+        <input type="email" name="email" placeholder="voce@email.com" required autofocus>
+      </label>
+      <label>Senha
+        <input type="password" name="password" placeholder="••••••••" required>
+      </label>
+      <button type="submit" class="btn btn--primary btn--block">Entrar</button>
+    </form>
+    <p class="form-foot">Não tem conta? <a href="/auth/register">Cadastre-se</a></p>
+  </div>
+</div>
+<%- include('../partials/footer') %>

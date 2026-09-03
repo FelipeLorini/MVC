@@ -1,0 +1,83 @@
+<%- include('../partials/header') %>
+<% const eventDate = new Date(event.event_date); %>
+
+<div class="event-detail">
+  <div class="event-detail__main">
+    <p class="eyebrow">Evento</p>
+    <h1><%= event.title %></h1>
+
+    <div class="event-detail__meta">
+      <span>
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <%= eventDate.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' }) %> às <%= eventDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) %>
+      </span>
+      <span>
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <%= event.location || 'Local a definir' %>
+      </span>
+      <span>
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <%= totalRegistrations %> inscrito<%= totalRegistrations === 1 ? '' : 's' %><% if (event.capacity > 0) { %> de <%= event.capacity %><% } %>
+      </span>
+    </div>
+
+    <p class="event-detail__description"><%= event.description || 'Sem descrição adicional.' %></p>
+
+    <% if (currentUser && currentUser.id === event.organizer_id) { %>
+      <h2>Inscritos (<%= attendees.length %>)</h2>
+      <% if (attendees.length === 0) { %>
+        <p class="muted">Ninguém se inscreveu ainda.</p>
+      <% } else { %>
+        <ul class="attendee-list">
+          <% attendees.forEach((a) => { %>
+            <li>
+              <span class="avatar avatar--sm"><%= a.name.split(' ').map((n) => n[0]).slice(0, 2).join('').toUpperCase() %></span>
+              <span><%= a.name %></span>
+              <span class="muted"><%= a.email %></span>
+            </li>
+          <% }) %>
+        </ul>
+      <% } %>
+    <% } %>
+  </div>
+
+  <aside>
+    <div class="ticket-panel">
+      <span class="ticket-panel__day"><%= String(eventDate.getDate()).padStart(2, '0') %></span>
+      <span class="ticket-panel__month"><%= eventDate.toLocaleDateString('pt-BR', { month: 'long' }) %></span>
+
+      <hr class="ticket-panel__divider">
+
+      <p class="ticket-panel__organizer">Organizado por<br><strong><%= event.organizer_name %></strong></p>
+
+      <% if (currentUser && currentUser.role === 'participante') { %>
+        <% if (isRegistered) { %>
+          <form action="/events/<%= event.id %>/register?_method=DELETE" method="POST">
+            <button type="submit" class="btn btn--ghost btn--block">Cancelar inscrição</button>
+          </form>
+          <p class="ticket-panel__note">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Você está inscrito
+          </p>
+        <% } else { %>
+          <form action="/events/<%= event.id %>/register" method="POST">
+            <button type="submit" class="btn btn--primary btn--block">Inscrever-se</button>
+          </form>
+        <% } %>
+      <% } else if (!currentUser) { %>
+        <a href="/auth/login" class="btn btn--primary btn--block">Entrar para se inscrever</a>
+      <% } %>
+
+      <% if (currentUser && currentUser.id === event.organizer_id) { %>
+        <div class="ticket-panel__owner-actions">
+          <a href="/events/<%= event.id %>/edit" class="btn btn--ghost btn--block">Editar evento</a>
+          <form action="/events/<%= event.id %>?_method=DELETE" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este evento?');">
+            <button type="submit" class="btn btn--danger-ghost btn--block">Excluir evento</button>
+          </form>
+        </div>
+      <% } %>
+    </div>
+  </aside>
+</div>
+
+<%- include('../partials/footer') %>

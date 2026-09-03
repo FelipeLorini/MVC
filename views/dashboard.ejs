@@ -1,0 +1,67 @@
+<%- include('partials/header') %>
+<section class="page-header">
+  <div>
+    <p class="eyebrow">Painel</p>
+    <h1>Meu painel</h1>
+  </div>
+</section>
+
+<div class="stat-grid">
+  <% if (currentUser.role === 'organizador') { %>
+    <div class="stat-chip">
+      <span class="stat-chip__value"><%= myEvents.length %></span>
+      <span class="stat-chip__label">Eventos criados</span>
+    </div>
+  <% } %>
+  <div class="stat-chip">
+    <span class="stat-chip__value"><%= registrations.length %></span>
+    <span class="stat-chip__label">Inscrições ativas</span>
+  </div>
+</div>
+
+<% if (currentUser.role === 'organizador') { %>
+  <section class="section">
+    <div class="section__header">
+      <h2>Meus eventos</h2>
+      <a href="/events/new" class="link-arrow">
+        Criar novo
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+    <% if (myEvents.length === 0) { %>
+      <div class="empty-state empty-state--compact">
+        <p>Você ainda não criou eventos.</p>
+        <a href="/events/new" class="btn btn--primary btn--sm">Criar o primeiro</a>
+      </div>
+    <% } else { %>
+      <ul class="simple-list">
+        <% myEvents.forEach((e) => { %>
+          <li>
+            <a href="/events/<%= e.id %>"><%= e.title %></a>
+            <span class="muted"><%= new Date(e.event_date).toLocaleDateString('pt-BR') %></span>
+          </li>
+        <% }) %>
+      </ul>
+    <% } %>
+  </section>
+<% } %>
+
+<section class="section">
+  <div class="section__header"><h2>Minhas inscrições</h2></div>
+  <% if (registrations.length === 0) { %>
+    <div class="empty-state empty-state--compact">
+      <p>Você ainda não se inscreveu em nenhum evento.</p>
+      <a href="/events" class="btn btn--primary btn--sm">Ver eventos</a>
+    </div>
+  <% } else { %>
+    <ul class="simple-list">
+      <% registrations.forEach((r) => { %>
+        <li>
+          <a href="/events/<%= r.event_id %>"><%= r.title %></a>
+          <span class="muted"><%= new Date(r.event_date).toLocaleDateString('pt-BR') %></span>
+        </li>
+      <% }) %>
+    </ul>
+  <% } %>
+</section>
+<%- include('partials/footer') %>

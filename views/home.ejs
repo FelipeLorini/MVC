@@ -1,0 +1,39 @@
+<%- include('partials/header') %>
+
+<section class="hero">
+  <div class="hero__content">
+    <p class="eyebrow">Gestão de eventos, do jeito simples</p>
+    <h1>Organize. Divulgue.<br><span class="hero__accent">Encha a sala.</span></h1>
+    <p class="hero__lead">
+      O EventHub reúne organizadores e participantes em um só lugar: crie eventos,
+      abra inscrições e acompanhe quem confirmou presença — tudo em poucos cliques.
+    </p>
+    <div class="hero__actions">
+      <a href="/events" class="btn btn--primary btn--lg">
+        Ver eventos
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+      <a href="/auth/register" class="btn btn--ghost btn--lg">Criar conta grátis</a>
+    </div>
+    <p class="hero__stat"><strong><%= totalEvents %></strong> evento<%= totalEvents === 1 ? '' : 's' %> disponível<%= totalEvents === 1 ? '' : 'is' %> agora</p>
+  </div>
+</section>
+
+<% if (featuredEvents.length > 0) { %>
+  <section class="section" style="margin-top: 0;">
+    <div class="section__header">
+      <h2>Próximos eventos</h2>
+      <a href="/events" class="link-arrow">
+        Ver todos
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+    <div class="ticket-grid">
+      <% featuredEvents.forEach((event) => { %>
+        <%- include('events/_card', { event }) %>
+      <% }) %>
+    </div>
+  </section>
+<% } %>
+
+<%- include('partials/footer') %>
