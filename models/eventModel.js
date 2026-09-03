@@ -1,14 +1,8 @@
 const pool = require('../config/db');
 
-/**
- * Acesso a dados de eventos. Nenhuma regra de negocio aqui —
- * apenas leitura/escrita na tabela `events`, sempre via prepared
- * statements (?) para evitar SQL Injection.
- */
 const EventModel = {
-  /** Lista todos os eventos, com o nome do organizador, ordenados por data. */
   async findAll() {
-    const [rows] = await pool.execute(
+    const [rows] = await pool.query(
       `SELECT e.*, u.name AS organizer_name
        FROM events e
        JOIN users u ON u.id = e.organizer_id
@@ -17,9 +11,8 @@ const EventModel = {
     return rows;
   },
 
-  /** @param {number} id @returns {Promise<object|null>} */
   async findById(id) {
-    const [rows] = await pool.execute(
+    const [rows] = await pool.query(
       `SELECT e.*, u.name AS organizer_name
        FROM events e
        JOIN users u ON u.id = e.organizer_id
@@ -29,18 +22,16 @@ const EventModel = {
     return rows[0] || null;
   },
 
-  /** @param {number} organizerId @returns {Promise<object[]>} */
   async findByOrganizer(organizerId) {
-    const [rows] = await pool.execute(
+    const [rows] = await pool.query(
       'SELECT * FROM events WHERE organizer_id = ? ORDER BY event_date DESC',
       [organizerId]
     );
     return rows;
   },
 
-  /** @returns {Promise<number>} ID do evento criado */
   async create({ title, description, eventDate, location, capacity, organizerId }) {
-    const [result] = await pool.execute(
+    const [result] = await pool.query(
       `INSERT INTO events (title, description, event_date, location, capacity, organizer_id)
        VALUES (?, ?, ?, ?, ?, ?)`,
       [title, description, eventDate, location, capacity, organizerId]
@@ -49,7 +40,7 @@ const EventModel = {
   },
 
   async update(id, { title, description, eventDate, location, capacity }) {
-    await pool.execute(
+    await pool.query(
       `UPDATE events SET title = ?, description = ?, event_date = ?, location = ?, capacity = ?
        WHERE id = ?`,
       [title, description, eventDate, location, capacity, id]
@@ -57,7 +48,7 @@ const EventModel = {
   },
 
   async delete(id) {
-    await pool.execute('DELETE FROM events WHERE id = ?', [id]);
+    await pool.query('DELETE FROM events WHERE id = ?', [id]);
   }
 };
 
