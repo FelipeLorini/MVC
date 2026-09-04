@@ -15,8 +15,6 @@ const dashboardRoutes = require('./routes/dashboardRoutes');
 const { attachUser } = require('./middlewares/authMiddleware');
 const errorHandler = require('./middlewares/errorHandler');
 
-env.validateEnv();
-
 const app = express();
 
 app.set('view engine', 'ejs');
